@@ -1,7 +1,7 @@
 from django.db import models
 
 
-from django.db import models
+from django.utils.text import slugify
 
 class GreetingCard(models.Model):
     groom_name = models.CharField("اسم العريس", max_length=50)
@@ -11,7 +11,16 @@ class GreetingCard(models.Model):
     bride_image = models.ImageField("صورة العروسة", upload_to='bride_images/')
 
     created_at = models.DateTimeField("تاريخ الإنشاء", auto_now_add=True)
-
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(f"{self.groom_name}_{self.bride_name}")
+            unique_slug = base_slug
+            counter = 1
+            while GreetingCard.objects.filter(slug=unique_slug).exists():
+                unique_slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = unique_slug
+        super().save(*args, **kwargs) 
     def __str__(self):
         return f"{self.groom_name} و {self.bride_name}"
 
