@@ -1,29 +1,39 @@
 from django.db import models
 
 
-class GreetingCard(models.Model):
-    groom_name = models.CharField(max_length=50)
-    bride_name = models.CharField(max_length=50)
-    slug = models.SlugField(unique=True)
-    groom_image = models.ImageField(upload_to='groom_images/')
-    bride_image = models.ImageField(upload_to='bride_images/')
+from django.db import models
 
-    created_at = models.DateTimeField(auto_now_add=True)
+class GreetingCard(models.Model):
+    groom_name = models.CharField("اسم العريس", max_length=50)
+    bride_name = models.CharField("اسم العروسة", max_length=50)
+    slug = models.SlugField("الاسم المختصر للرابط", unique=True)
+    groom_image = models.ImageField("صورة العريس", upload_to='groom_images/')
+    bride_image = models.ImageField("صورة العروسة", upload_to='bride_images/')
+
+    created_at = models.DateTimeField("تاريخ الإنشاء", auto_now_add=True)
 
     def __str__(self):
-        return f"{self.groom_name} & {self.bride_name}"
-        
+        return f"{self.groom_name} و {self.bride_name}"
+
+    class Meta:
+        verbose_name = "كارت تهنئة"
+        verbose_name_plural = "كروت التهنئة"
         
 class Message(models.Model):
-    TO_CHOICES = [
-        ('G', 'Groom'),
-        ('B', 'Bride'),
-    ]
-    card = models.ForeignKey(GreetingCard, related_name='messages', on_delete=models.CASCADE)
-    sender_name = models.CharField(max_length=50)
-    message_text = models.TextField()
-    to = models.CharField(max_length=1, choices=TO_CHOICES, default='G')
-    created_at = models.DateTimeField(auto_now_add=True)
+    TO_CHOICES = (
+        ('groom', 'العريس'),
+        ('bride', 'العروسة'),
+    )
+
+    card = models.ForeignKey(GreetingCard, related_name="messages", on_delete=models.CASCADE, verbose_name="كارت التهنئة")
+    text = models.TextField("نص التهنئة")
+    sender_name = models.CharField("اسم المُرسل", max_length=50)
+    to = models.CharField("إلى", max_length=10, choices=TO_CHOICES)
+    created_at = models.DateTimeField("تاريخ الإرسال", auto_now_add=True)
 
     def __str__(self):
-        return f"Message from {self.sender_name} on {self.created_at}"
+        return f"من {self.sender_name} إلى {self.get_to_display()}"
+
+    class Meta:
+        verbose_name = "رسالة تهنئة"
+        verbose_name_plural = "رسائل التهنئة"
