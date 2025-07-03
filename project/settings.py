@@ -133,3 +133,4 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+CORS_ALLOW_ALL_ORIGINS = True  # مؤقتًا للتجربة فقط

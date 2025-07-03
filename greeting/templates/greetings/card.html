@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تهنئة زواج</title>
+  <style>
+    body {
+      background: linear-gradient(to top left, #ffe6e6, #fff5f5);
+      font-family: 'Cairo', sans-serif;
+      text-align: center;
+      padding: 50px 20px;
+      color: #6b3e26;
+    }
+
+    .card-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      font-size: 32px;
+      color: #c0392b;
+      margin-bottom: 20px;
+    }
+
+    .names {
+      font-size: 28px;
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 15px;
+    }
+
+    .images {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 20px;
+    }
+
+    .images img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid #f1c40f;
+      box-shadow: 0 0 10px #d35400;
+    }
+
+    .congrats {
+      font-size: 20px;
+      margin-top: 10px;
+      margin-bottom: 30px;
+    }
+
+    form {
+      text-align: right;
+      background: #fff9f0;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    button {
+      background: #e67e22;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .success-msg {
+      color: green;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card-container">
+    <h1>🎉 ألف مبروك 🎉</h1>
+
+    <div class="images">
+      <img src="{{ card.groom_image.url }}" alt="العريس">
+      <img src="{{ card.bride_image.url }}" alt="العروسة">
+    </div>
+
+    <div class="names">{{ card.groom_name }} ❤️ {{ card.bride_name }}</div>
+
+    <div class="congrats">نتمنى لكم حياة مليئة بالسعادة والحب 🌹</div>
+
+    <!-- 📨 نموذج إرسال التهنئة -->
+    <form id="messageForm">
+      <meta name="csrf-token" content="{{ csrf_token }}">
+      <label for="sender_name">اسمك</label>
+      <input type="text" id="sender_name" name="sender_name" required>
+
+      <label for="text">نص التهنئة</label>
+      <textarea id="text" name="text" rows="4" required></textarea>
+
+      <label for="to">إلى</label>
+      <select id="to" name="to" required>
+        <option value="groom">العريس</option>
+        <option value="bride">العروسة</option>
+      </select>
+
+      <button type="submit">إرسال التهنئة</button>
+
+      <div class="success-msg" id="successMessage" style="display:none;">🎊 تم إرسال التهنئة بنجاح!</div>
+    </form>
+  </div>
+
+  <!-- 🔌 AJAX -->
+ <script>
+  document.getElementById('messageForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    const data = {
+      card: {{ card.id }},
+      sender_name: document.getElementById('sender_name').value,
+      text: document.getElementById('text').value,
+      to: document.getElementById('to').value,
+    };
+
+    fetch('/api/messages/send/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('فشل الإرسال');
+      return response.json();
+    })
+    .then(data => {
+      document.getElementById('messageForm').reset();
+      document.getElementById('successMessage').style.display = 'block';
+    })
+    .catch(error => {
+      alert('حدث خطأ أثناء الإرسال.');
+      console.error(error);
+    });
+  });
+</script>
+</body>
+</html>
