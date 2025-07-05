@@ -37,10 +37,23 @@ def card_page_view(request, slug):
     return render(request, 'greetings/card.html', {'card': card})
     
     
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 
-@method_decorator(csrf_exempt, name='dispatch')
+
+
 class MessageCreateView(generics.CreateAPIView):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
+    
+    
+    
+
+
+def groom_messages_view(request, slug):
+    card = get_object_or_404(GreetingCard, slug=slug)
+    messages = Message.objects.filter(card=card, to='groom')
+    return render(request, 'greetings/messages.html', {'messages': messages, 'card': card, 'to': 'العريس'})
+
+def bride_messages_view(request, slug):
+    card = get_object_or_404(GreetingCard, slug=slug)
+    messages = Message.objects.filter(card=card, to='bride')
+    return render(request, 'greetings/messages.html', {'messages': messages, 'card': card, 'to': 'العروسة'})
