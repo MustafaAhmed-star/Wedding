@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>🎉 تهنئتك وصلت!</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(to bottom right, #fff5f0, #fdecea);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      color: #6b3e26;
+      overflow: hidden;
+    }
+
+    .thank-box {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      animation: fadeIn 1s ease-in-out;
+      max-width: 600px;
+    }
+
+    h1 {
+      font-size: 30px;
+      color: #c0392b;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 18px;
+      margin-bottom: 25px;
+    }
+
+    .btns a {
+      display: inline-block;
+      margin: 5px;
+      background: #e67e22;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hearts {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .heart {
+      width: 20px;
+      height: 20px;
+      background-color: #ff6b81;
+      position: absolute;
+      animation: float 6s infinite;
+      transform: rotate(45deg);
+      border-radius: 50% 50% 0 0;
+    }
+
+    .heart::after, .heart::before {
+      content: "";
+      width: 20px;
+      height: 20px;
+      background-color: #ff6b81;
+      position: absolute;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: -10px;
+      top: 0;
+    }
+
+    @keyframes float {
+      0% {
+        bottom: -50px;
+        opacity: 0;
+        left: 50%;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        bottom: 100%;
+        left: calc(50% + 100px);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hearts">
+    {% for i in "12345678910" %}
+  {% with left=forloop.counter0|add:1 %}
+    <div class="heart" style="left: {{ left }}0%; animation-delay: {{ forloop.counter0 }}s;"></div>
+  {% endwith %}
+{% endfor %}
+  </div>
+
+  <div class="thank-box">
+    <h1>🎉 شكرًا لمشاركتك!</h1>
+    <p>✅ تم إرسال التهنئة بنجاح</p>
+    <p>نأمل أن تسعد بها القلوب ❤️</p>
+
+    <div class="btns">
+      <a href="{% url 'card-page' slug=card.slug %}">🔙 العودة للبطاقة</a>
+      <a href="{% url 'groom-messages' slug=card.slug %}">📜 تهاني العريس</a>
+      <a href="{% url 'bride-messages' slug=card.slug %}">📜 تهاني العروسة</a>
+    </div>
+  </div>
+
+</body>
+</html>

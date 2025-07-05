@@ -225,12 +225,10 @@
         if (!response.ok) throw new Error('فشل الإرسال');
         return response.json();
       })
-      .then(data => {
-        localStorage.setItem(`greeting_sent_${slug}`, 'true');
-        form.reset();
-        form.style.display = 'none';
-        successMsg.style.display = 'block';
-      })
+     .then(data => {
+  localStorage.setItem(`greeting_sent_${slug}`, 'true');
+  window.location.href = `/api/cards/${slug}/thank-you/`;  // هنوصله للصفحة الجديدة
+})
       .catch(error => {
         alert('حدث خطأ أثناء الإرسال.');
         console.error(error);

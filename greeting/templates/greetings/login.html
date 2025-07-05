@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>دخول إلى تهاني {{ to }}</title>
+  <style>
+    body {
+      background: linear-gradient(to top right, #fdf2f2, #ffeaea);
+      font-family: 'Cairo', sans-serif;
+      text-align: center;
+      padding: 60px 20px;
+      color: #6b3e26;
+    }
+
+    .box {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      margin-bottom: 25px;
+      color: #c0392b;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    button {
+      background: #e67e22;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .back {
+      margin-top: 15px;
+    }
+
+    .back a {
+      color: #3498db;
+      text-decoration: none;
+      font-size: 14px;
+    }
+  </style>
+  
+</head>
+<body>
+  <div class="box">
+    <h1>🔐 الدخول لتهاني {{ to }}</h1>
+    <form method="post" action="{{ action_url }}">
+      {% csrf_token %}
+      <label for="code">أدخل الرمز السري:</label>
+      <input type="text" name="code" id="code" required>
+      <button type="submit">دخول</button>
+
+      {% if error %}
+        <div class="error">❌ الرمز غير صحيح، حاول مرة أخرى.</div>
+      {% endif %}
+    </form>
+
+    <div class="back">
+      <a href="{% url 'card-page' slug=card.slug %}">⬅️ الرجوع للبطاقة</a>
+    </div>
+  </div>
+</body>
+</html>

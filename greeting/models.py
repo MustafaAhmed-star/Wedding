@@ -9,6 +9,8 @@ class GreetingCard(models.Model):
     slug = models.SlugField("الاسم المختصر للرابط", unique=True)
     groom_image = models.ImageField("صورة العريس", upload_to='groom_images/')
     bride_image = models.ImageField("صورة العروسة", upload_to='bride_images/')
+    groom_code = models.CharField(max_length=10)
+    bride_code = models.CharField(max_length=10)
 
     created_at = models.DateTimeField("تاريخ الإنشاء", auto_now_add=True)
     def save(self, *args, **kwargs):
